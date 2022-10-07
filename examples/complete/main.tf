@@ -33,14 +33,36 @@ locals {
 # EKS Addon
 ################################################################################
 
-# module "eks_addon" {
-#   source = "../../"
+module "helm_release_only" {
+  source = "../../"
 
-#   cluster_id                = module.eks.cluster_id
-#   cluster_oidc_provider_arn = module.eks.oidc_provider_arn
+  chart         = "metrics-server"
+  chart_version = "3.8.2"
+  repository    = "https://kubernetes-sigs.github.io/metrics-server/"
+  description   = "Metric server helm Chart deployment configuration"
+  namespace     = "kube-system"
 
-#   tags = local.tags
-# }
+  values = [
+    <<-EOT
+      podDisruptionBudget:
+        maxUnavailable: 1
+      metrics:
+        enabled: true
+    EOT
+  ]
+
+  set = [
+    {
+      name  = "replicas"
+      value = 3
+    }
+  ]
+}
+
+module "disabled" {
+  source = "../../"
+
+}
 
 ################################################################################
 # Supporting resources
