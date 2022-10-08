@@ -34,5 +34,29 @@ output "app_version" {
 
 output "values" {
   description = "The compounded values from `values` and `set*` attributes"
-  value       = jsondecode(try(helm_release.this[0].metadata[0].values, []))
+  value       = try(helm_release.this[0].metadata[0].values, [])
+}
+
+################################################################################
+# IAM Role for Service Account(s) (IRSA)
+################################################################################
+
+output "iam_role_arn" {
+  description = "ARN of IAM role"
+  value       = try(aws_iam_role.this[0].arn, null)
+}
+
+output "iam_role_name" {
+  description = "Name of IAM role"
+  value       = try(aws_iam_role.this[0].name, null)
+}
+
+output "iam_role_path" {
+  description = "Path of IAM role"
+  value       = try(aws_iam_role.this[0].path, null)
+}
+
+output "iam_role_unique_id" {
+  description = "Unique ID of IAM role"
+  value       = try(aws_iam_role.this[0].unique_id, null)
 }
