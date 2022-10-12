@@ -1,70 +1,31 @@
-<!-- BEGIN_TF_DOCS -->
-# Creating modules for AWS I&A Organization
+# AWS EKS Addon Terraform module
 
-This repo template is used to seed Terraform Module templates for the [AWS I&A GitHub organization](https://github.com/aws-ia). Usage of this template is allowed per included license. PRs to this template will be considered but are not guaranteed to be included. Consider creating an issue to discuss a feature you want to include before taking the time to create a PR.
-### TL;DR
+Terraform module which provisions an addon on AWS EKS clusters.
 
-1. [install pre-commit](https://pre-commit.com/)
-2. configure pre-commit: `pre-commit install`
-3. install required tools
-    - [tflint](https://github.com/terraform-linters/tflint)
-    - [tfsec](https://aquasecurity.github.io/tfsec/v1.0.11/)
-    - [terraform-docs](https://github.com/terraform-docs/terraform-docs)
-    - [golang](https://go.dev/doc/install) (for macos you can use `brew`)
-    - [coreutils](https://www.gnu.org/software/coreutils/)
+## Usage
 
-Write code according to [I&A module standards](https://aws-ia.github.io/standards-terraform/)
+```hcl
+module "eks_addon" {
+  source = "aws-ia/eks-addon/aws"
 
-## Module Documentation
+  ## TODO
+}
+```
 
-**Do not manually update README.md**. `terraform-docs` is used to generate README files. For any instructions an content, please update [.header.md](./.header.md) then simply run `terraform-docs ./` or allow the `pre-commit` to do so.
+## Examples
 
-## Terratest
+Examples codified under the [`examples`](https://github.com/aws-ia/terraform-aws-eks-addon) are intended to give users references for how to use the module(s) as well as testing/validating changes to the source code of the module. If contributing to the project, please be sure to make any appropriate updates to the relevant examples to allow maintainers to test your changes and to keep the examples up to date for users. Thank you!
 
-Please include tests to validate your examples/<> root modules, at a minimum. This can be accomplished with usually only slight modifications to the [boilerplate test provided in this template](./test/examples\_basic\_test.go)
+- [Complete](https://github.com/aws-ia/terraform-aws-eks-addon/complete)
 
-### Configure and run Terratest
-
-1. Install
-
-    [golang](https://go.dev/doc/install) (for macos you can use `brew`)
-2. Change directory into the test folder.
-    
-    `cd test`
-3. Initialize your test
-    
-    go mod init github.com/[github org]/[repository]
-
-    `go mod init github.com/aws-ia/terraform-aws-vpc`
-4. Run tidy
-
-    `git mod tidy`
-5. Install Terratest
-
-    `go get github.com/gruntwork-io/terratest/modules/terraform`
-6. Run test (You can have multiple test files).
-    - Run all tests
-
-        `go test`
-    - Run a specific test with a timeout
-
-        `go test -run examples_basic_test.go -timeout 45m`
-
-## Module Standards
-
-For best practices and information on developing with Terraform, see the [I&A Module Standards](https://aws-ia.github.io/standards-terraform/)
-
-## Continuous Integration
-
-The I&A team uses AWS CodeBuild to perform continuous integration (CI) within the organization. Our CI uses the a repo's `.pre-commit-config.yaml` file as well as some other checks. All PRs with other CI will be rejected. See our [FAQ](https://aws-ia.github.io/standards-terraform/faq/#are-modules-protected-by-ci-automation) for more details.
-
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0, < 5.0.0 |
-| <a name="requirement_awscc"></a> [awscc](#requirement\_awscc) | >= 0.24.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.6 |
 
 ## Providers
 
@@ -85,4 +46,14 @@ No inputs.
 ## Outputs
 
 No outputs.
-<!-- END_TF_DOCS -->
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## Community
+
+- [Code of conduct](.github/CODE_OF_CONDUCT.md)
+- [Contributing](.github/CONTRIBUTING.md)
+- [Security issue notifications](.github/CONTRIBUTING.md#security-issue-notifications)
+
+## License
+
+Apache-2.0 Licensed. See [LICENSE](https://github.com/aws-ia/terraform-aws-eks-addon/blob/main/LICENSE).
