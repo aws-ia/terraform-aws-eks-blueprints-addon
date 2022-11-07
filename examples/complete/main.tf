@@ -247,6 +247,7 @@ resource "aws_iam_instance_profile" "karpenter" {
 }
 
 data "aws_iam_policy_document" "karpenter_controller" {
+  # # checkov:skip=CKV_AWS_111
   statement {
     actions = [
       "ec2:CreateLaunchTemplate",
