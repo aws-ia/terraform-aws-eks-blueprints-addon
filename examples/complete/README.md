@@ -1,4 +1,4 @@
-# Complete AWS EKS Addon Example
+# Complete AWS EKS Blueprint Addon Example
 
 Configuration in this directory provisions:
 - An EKS cluster and VPC used to support the example
@@ -24,15 +24,15 @@ Note that this example may create resources which will incur monetary charges on
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
-| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.6 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.47 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.9 |
 | <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >= 1.14 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.47 |
 | <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >= 1.14 |
 
 ## Modules
@@ -40,7 +40,7 @@ Note that this example may create resources which will incur monetary charges on
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_disabled"></a> [disabled](#module\_disabled) | ../../ | n/a |
-| <a name="module_eks"></a> [eks](#module\_eks) | terraform-aws-modules/eks/aws | ~> 18.30 |
+| <a name="module_eks"></a> [eks](#module\_eks) | terraform-aws-modules/eks/aws | ~> 19.10 |
 | <a name="module_helm_release_irsa"></a> [helm\_release\_irsa](#module\_helm\_release\_irsa) | ../../ | n/a |
 | <a name="module_helm_release_only"></a> [helm\_release\_only](#module\_helm\_release\_only) | ../../ | n/a |
 | <a name="module_irsa_only"></a> [irsa\_only](#module\_irsa\_only) | ../../ | n/a |
@@ -103,4 +103,4 @@ No inputs.
 | <a name="output_irsa_only_version"></a> [irsa\_only\_version](#output\_irsa\_only\_version) | A SemVer 2 conformant version string of the chart |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
-Apache-2.0 Licensed. See [LICENSE](https://github.com/aws-ia/terraform-aws-eks-addon/blob/main/LICENSE).
+Apache-2.0 Licensed. See [LICENSE](https://github.com/aws-ia/terraform-aws-eks-blueprint-addon/blob/main/LICENSE).
