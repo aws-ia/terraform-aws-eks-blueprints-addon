@@ -19,7 +19,7 @@ provider "kubectl" {
 }
 
 data "aws_eks_cluster_auth" "this" {
-  name = module.eks.cluster_id
+  name = module.eks.cluster_name
 }
 
 data "aws_caller_identity" "current" {}
@@ -37,12 +37,12 @@ locals {
 
   tags = {
     Example    = local.name
-    GithubRepo = "aws-ia/terraform-aws-eks-addon"
+    GithubRepo = "aws-ia/terraform-aws-eks-blueprint-addon"
   }
 }
 
 ################################################################################
-# EKS Addon
+# EKS Blueprint Addon
 ################################################################################
 
 module "helm_release_only" {
@@ -84,7 +84,7 @@ module "helm_release_irsa" {
   set = [
     {
       name  = "clusterName"
-      value = module.eks.cluster_id
+      value = module.eks.cluster_name
     },
     {
       name  = "clusterEndpoint"
@@ -157,40 +157,21 @@ module "disabled" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 18.30"
+  version = "~> 19.10"
 
   cluster_name    = local.name
-  cluster_version = "1.23"
+  cluster_version = "1.24"
 
-  vpc_id                   = module.vpc.vpc_id
-  subnet_ids               = module.vpc.private_subnets
-  control_plane_subnet_ids = module.vpc.intra_subnets
-
-  node_security_group_additional_rules = {
-    # Control plane invoke Karpenter webhook
-    ingress_karpenter_webhook_tcp = {
-      description                   = "Control plane invoke Karpenter webhook"
-      protocol                      = "tcp"
-      from_port                     = 8443
-      to_port                       = 8443
-      type                          = "ingress"
-      source_cluster_security_group = true
-    }
-  }
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
 
   eks_managed_node_groups = {
     initial = {
-      instance_types        = ["m5.xlarge"]
-      create_security_group = false
+      instance_types = ["m5.xlarge"]
 
       min_size     = 1
       max_size     = 2
       desired_size = 1
-
-      iam_role_additional_policies = [
-        # Required by Karpenter
-        "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-      ]
     }
   }
 
@@ -212,7 +193,6 @@ module "vpc" {
   azs             = local.azs
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
   public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 48)]
-  intra_subnets   = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 52)]
 
   enable_nat_gateway   = true
   single_nat_gateway   = true
@@ -279,7 +259,7 @@ data "aws_iam_policy_document" "karpenter_controller" {
     condition {
       test     = "StringEquals"
       variable = "ec2:ResourceTag/${local.karpenter_tag_key}"
-      values   = [module.eks.cluster_id]
+      values   = [module.eks.cluster_name]
     }
   }
 
@@ -293,7 +273,7 @@ data "aws_iam_policy_document" "karpenter_controller" {
     condition {
       test     = "StringEquals"
       variable = "ec2:ResourceTag/${local.karpenter_tag_key}"
-      values   = [module.eks.cluster_id]
+      values   = [module.eks.cluster_name]
     }
   }
 
@@ -366,11 +346,11 @@ resource "kubectl_manifest" "karpenter_node_template" {
       name: default
     spec:
       subnetSelector:
-        ${local.karpenter_tag_key}: ${module.eks.cluster_id}
+        ${local.karpenter_tag_key}: ${module.eks.cluster_name}
       securityGroupSelector:
-        ${local.karpenter_tag_key}: ${module.eks.cluster_id}
+        ${local.karpenter_tag_key}: ${module.eks.cluster_name}
       tags:
-        ${local.karpenter_tag_key}: ${module.eks.cluster_id}
+        ${local.karpenter_tag_key}: ${module.eks.cluster_name}
   YAML
 
   depends_on = [

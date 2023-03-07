@@ -1,4 +1,4 @@
-# AWS EKS Addon Terraform module
+# AWS EKS Blueprint Addon Terraform module
 
 Terraform module which provisions an addon ([Helm release](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release)) and an [IAM role for service accounts (IRSA)](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html).
 
@@ -8,7 +8,7 @@ Terraform module which provisions an addon ([Helm release](https://registry.terr
 
 ```hcl
 module "eks_addon" {
-  source = "aws-ia/eks-addon/aws"
+  source = "aws-ia/eks-blueprint-addon/aws"
 
   chart            = "karpenter"
   chart_version    = "0.16.2"
@@ -20,7 +20,7 @@ module "eks_addon" {
   set = [
     {
       name  = "clusterName"
-      value = "eks-addon-example"
+      value = "eks-blueprint-addon-example"
     },
     {
       name  = "clusterEndpoint"
@@ -64,7 +64,7 @@ module "eks_addon" {
 
 ```hcl
 module "eks_addon" {
-  source = "aws-ia/eks-addon/aws"
+  source = "aws-ia/eks-blueprint-addon/aws"
 
   chart         = "metrics-server"
   chart_version = "3.8.2"
@@ -94,7 +94,7 @@ module "eks_addon" {
 
 ```hcl
 module "eks_addon" {
-  source = "aws-ia/eks-addon/aws"
+  source = "aws-ia/eks-blueprint-addon/aws"
 
   # Disable helm release
   create_release = false
@@ -122,9 +122,9 @@ module "eks_addon" {
 
 ## Examples
 
-Examples codified under the [`examples`](https://github.com/aws-ia/terraform-aws-eks-addon) are intended to give users references for how to use the module(s) as well as testing/validating changes to the source code of the module. If contributing to the project, please be sure to make any appropriate updates to the relevant examples to allow maintainers to test your changes and to keep the examples up to date for users. Thank you!
+Examples codified under the [`examples`](https://github.com/aws-ia/terraform-aws-eks-blueprint-addon) are intended to give users references for how to use the module(s) as well as testing/validating changes to the source code of the module. If contributing to the project, please be sure to make any appropriate updates to the relevant examples to allow maintainers to test your changes and to keep the examples up to date for users. Thank you!
 
-- [Complete](https://github.com/aws-ia/terraform-aws-eks-addon/complete)
+- [Complete](https://github.com/aws-ia/terraform-aws-eks-blueprint-addon/complete)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -132,15 +132,15 @@ Examples codified under the [`examples`](https://github.com/aws-ia/terraform-aws
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
-| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.6 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.47 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.9 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
-| <a name="provider_helm"></a> [helm](#provider\_helm) | >= 2.6 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.47 |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | >= 2.9 |
 
 ## Modules
 
@@ -239,4 +239,4 @@ No modules.
 
 ## License
 
-Apache-2.0 Licensed. See [LICENSE](https://github.com/aws-ia/terraform-aws-eks-addon/blob/main/LICENSE).
+Apache-2.0 Licensed. See [LICENSE](https://github.com/aws-ia/terraform-aws-eks-blueprint-addon/blob/main/LICENSE).
