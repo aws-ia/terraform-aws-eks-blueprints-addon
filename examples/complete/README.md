@@ -1,4 +1,4 @@
-# Complete AWS EKS Blueprint Addon Example
+# Complete AWS EKS Blueprints Addon Example
 
 Configuration in this directory provisions:
 - An EKS cluster and VPC used to support the example
@@ -103,4 +103,4 @@ No inputs.
 | <a name="output_irsa_only_version"></a> [irsa\_only\_version](#output\_irsa\_only\_version) | A SemVer 2 conformant version string of the chart |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
-Apache-2.0 Licensed. See [LICENSE](https://github.com/aws-ia/terraform-aws-eks-blueprint-addon/blob/main/LICENSE).
+Apache-2.0 Licensed. See [LICENSE](https://github.com/aws-ia/terraform-aws-eks-blueprints-addon/blob/main/LICENSE).
