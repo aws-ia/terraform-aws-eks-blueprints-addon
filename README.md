@@ -1,4 +1,4 @@
-# AWS EKS Blueprint Addon Terraform module
+# AWS EKS Blueprints Addon Terraform module
 
 Terraform module which provisions an addon ([Helm release](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release)) and an [IAM role for service accounts (IRSA)](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html).
 
@@ -7,8 +7,8 @@ Terraform module which provisions an addon ([Helm release](https://registry.terr
 ### Create Addon (Helm Release) w/ IAM Role for Service Account (IRSA)
 
 ```hcl
-module "eks_addon" {
-  source = "aws-ia/eks-blueprint-addon/aws"
+module "eks_blueprints_addon" {
+  source = "aws-ia/eks-blueprints-addon/aws"
 
   chart            = "karpenter"
   chart_version    = "0.16.2"
@@ -20,7 +20,7 @@ module "eks_addon" {
   set = [
     {
       name  = "clusterName"
-      value = "eks-blueprint-addon-example"
+      value = "eks-blueprints-addon-example"
     },
     {
       name  = "clusterEndpoint"
@@ -63,8 +63,8 @@ module "eks_addon" {
 ### Create Addon (Helm Release) Only
 
 ```hcl
-module "eks_addon" {
-  source = "aws-ia/eks-blueprint-addon/aws"
+module "eks_blueprints_addon" {
+  source = "aws-ia/eks-blueprints-addon/aws"
 
   chart         = "metrics-server"
   chart_version = "3.8.2"
@@ -93,8 +93,8 @@ module "eks_addon" {
 ### Create IAM Role for Service Account (IRSA) Only
 
 ```hcl
-module "eks_addon" {
-  source = "aws-ia/eks-blueprint-addon/aws"
+module "eks_blueprints_addon" {
+  source = "aws-ia/eks-blueprints-addon/aws"
 
   # Disable helm release
   create_release = false
@@ -122,9 +122,9 @@ module "eks_addon" {
 
 ## Examples
 
-Examples codified under the [`examples`](https://github.com/aws-ia/terraform-aws-eks-blueprint-addon) are intended to give users references for how to use the module(s) as well as testing/validating changes to the source code of the module. If contributing to the project, please be sure to make any appropriate updates to the relevant examples to allow maintainers to test your changes and to keep the examples up to date for users. Thank you!
+Examples codified under the [`examples`](https://github.com/aws-ia/terraform-aws-eks-blueprints-addon) are intended to give users references for how to use the module(s) as well as testing/validating changes to the source code of the module. If contributing to the project, please be sure to make any appropriate updates to the relevant examples to allow maintainers to test your changes and to keep the examples up to date for users. Thank you!
 
-- [Complete](https://github.com/aws-ia/terraform-aws-eks-blueprint-addon/complete)
+- [Complete](https://github.com/aws-ia/terraform-aws-eks-blueprints-addon/complete)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -239,4 +239,4 @@ No modules.
 
 ## License
 
-Apache-2.0 Licensed. See [LICENSE](https://github.com/aws-ia/terraform-aws-eks-blueprint-addon/blob/main/LICENSE).
+Apache-2.0 Licensed. See [LICENSE](https://github.com/aws-ia/terraform-aws-eks-blueprints-addon/blob/main/LICENSE).

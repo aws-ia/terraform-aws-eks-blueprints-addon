@@ -37,12 +37,12 @@ locals {
 
   tags = {
     Example    = local.name
-    GithubRepo = "aws-ia/terraform-aws-eks-blueprint-addon"
+    GithubRepo = "aws-ia/terraform-aws-eks-blueprints-addon"
   }
 }
 
 ################################################################################
-# EKS Blueprint Addon
+# EKS Blueprints Addon
 ################################################################################
 
 module "helm_release_only" {
