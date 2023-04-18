@@ -46,7 +46,7 @@ locals {
 ################################################################################
 
 module "helm_release_only" {
-  source = "../../"
+  source = "../"
 
   chart         = "metrics-server"
   chart_version = "3.8.2"
@@ -72,7 +72,7 @@ module "helm_release_only" {
 }
 
 module "helm_release_irsa" {
-  source = "../../"
+  source = "../"
 
   chart            = "karpenter"
   chart_version    = "0.16.2"
@@ -96,7 +96,7 @@ module "helm_release_irsa" {
     }
   ]
 
-  set_irsa_name = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+  set_irsa_names = ["serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"]
   # # Equivalent to the following but the ARN is only known internally to the module
   # set = [{
   #   name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
@@ -106,7 +106,7 @@ module "helm_release_irsa" {
   # IAM role for service account (IRSA)
   create_role = true
   role_name   = "karpenter-controller"
-  role_policy_arns = {
+  role_policies = {
     karpenter = aws_iam_policy.karpenter_controller.arn
   }
 
@@ -122,7 +122,7 @@ module "helm_release_irsa" {
 }
 
 module "irsa_only" {
-  source = "../../"
+  source = "../"
 
   # Disable helm release
   create_release = false
@@ -130,7 +130,7 @@ module "irsa_only" {
   # IAM role for service account (IRSA)
   create_role = true
   role_name   = "aws-vpc-cni-ipv4"
-  role_policy_arns = {
+  role_policies = {
     AmazonEKS_CNI_Policy = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
   }
 
@@ -146,7 +146,7 @@ module "irsa_only" {
 }
 
 module "disabled" {
-  source = "../../"
+  source = "../"
 
   create = false
 }
@@ -185,7 +185,7 @@ module "eks" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   name = local.name
   cidr = local.vpc_cidr
@@ -194,17 +194,8 @@ module "vpc" {
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 4, k)]
   public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 48)]
 
-  enable_nat_gateway   = true
-  single_nat_gateway   = true
-  enable_dns_hostnames = true
-
-  # Manage so we can name
-  manage_default_network_acl    = true
-  default_network_acl_tags      = { Name = "${local.name}-default" }
-  manage_default_route_table    = true
-  default_route_table_tags      = { Name = "${local.name}-default" }
-  manage_default_security_group = true
-  default_security_group_tags   = { Name = "${local.name}-default" }
+  enable_nat_gateway = true
+  single_nat_gateway = true
 
   public_subnet_tags = {
     "kubernetes.io/role/elb" = 1

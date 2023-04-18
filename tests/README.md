@@ -1,4 +1,4 @@
-# Complete AWS EKS Blueprints Addon Example
+# Amazon EKS Blueprints Addon Tests
 
 Configuration in this directory provisions:
 - An EKS cluster and VPC used to support the example
@@ -39,12 +39,12 @@ Note that this example may create resources which will incur monetary charges on
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_disabled"></a> [disabled](#module\_disabled) | ../../ | n/a |
+| <a name="module_disabled"></a> [disabled](#module\_disabled) | ../ | n/a |
 | <a name="module_eks"></a> [eks](#module\_eks) | terraform-aws-modules/eks/aws | ~> 19.10 |
-| <a name="module_helm_release_irsa"></a> [helm\_release\_irsa](#module\_helm\_release\_irsa) | ../../ | n/a |
-| <a name="module_helm_release_only"></a> [helm\_release\_only](#module\_helm\_release\_only) | ../../ | n/a |
-| <a name="module_irsa_only"></a> [irsa\_only](#module\_irsa\_only) | ../../ | n/a |
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 3.0 |
+| <a name="module_helm_release_irsa"></a> [helm\_release\_irsa](#module\_helm\_release\_irsa) | ../ | n/a |
+| <a name="module_helm_release_only"></a> [helm\_release\_only](#module\_helm\_release\_only) | ../ | n/a |
+| <a name="module_irsa_only"></a> [irsa\_only](#module\_irsa\_only) | ../ | n/a |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 4.0 |
 
 ## Resources
 
