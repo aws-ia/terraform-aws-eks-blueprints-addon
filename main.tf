@@ -183,7 +183,7 @@ resource "aws_iam_role_policy_attachment" "additional" {
 locals {
   create_policy = local.create_role && var.create_policy
 
-  policy_name = coalesce(var.policy_name, local.role_name)
+  policy_name = try(coalesce(var.policy_name, local.role_name), "")
 }
 
 data "aws_iam_policy_document" "this" {
