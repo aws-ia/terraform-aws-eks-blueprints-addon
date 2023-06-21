@@ -9,7 +9,7 @@ Terraform module which provisions an addon ([Helm release](https://registry.terr
 ```hcl
 module "eks_blueprints_addon" {
   source = "aws-ia/eks-blueprints-addon/aws"
-  version = "1.0.0"
+  version = "1.0.0" #ensure to update this to the latest/desired version
 
   chart            = "karpenter"
   chart_version    = "0.16.2"
@@ -66,7 +66,7 @@ module "eks_blueprints_addon" {
 ```hcl
 module "eks_blueprints_addon" {
   source = "aws-ia/eks-blueprints-addon/aws"
-  version = "1.0.0"
+  version = "1.0.0" #ensure to update this to the latest/desired version
 
   chart         = "metrics-server"
   chart_version = "3.8.2"
@@ -97,7 +97,7 @@ module "eks_blueprints_addon" {
 ```hcl
 module "eks_blueprints_addon" {
   source = "aws-ia/eks-blueprints-addon/aws"
-  version = "1.0.0"
+  version = "1.0.0" #ensure to update this to the latest/desired version
 
   # Disable helm release
   create_release = false
