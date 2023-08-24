@@ -181,7 +181,7 @@ resource "aws_iam_role_policy_attachment" "additional" {
 ################################################################################
 
 locals {
-  create_policy = local.create_role && var.create_policy
+  create_policy = local.create_role && var.create_policy && length(var.policy_statements) > 0
 
   policy_name = try(coalesce(var.policy_name, local.role_name), "")
 }
