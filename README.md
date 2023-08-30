@@ -104,6 +104,7 @@ module "eks_blueprints_addon" {
 
   # IAM role for service account (IRSA)
   create_role = true
+  create_policy = false
   role_name   = "aws-vpc-cni-ipv4"
   role_policies = {
     AmazonEKS_CNI_Policy = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
