@@ -6,20 +6,14 @@ provider "helm" {
   kubernetes {
     host                   = module.eks.cluster_endpoint
     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-    token                  = data.aws_eks_cluster_auth.this.token
+
+    exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      command     = "aws"
+      # This requires the awscli to be installed locally where Terraform is executed
+      args = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+    }
   }
-}
-
-provider "kubectl" {
-  apply_retry_count      = 30
-  host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-  load_config_file       = false
-  token                  = data.aws_eks_cluster_auth.this.token
-}
-
-data "aws_eks_cluster_auth" "this" {
-  name = module.eks.cluster_name
 }
 
 data "aws_caller_identity" "current" {}
@@ -157,21 +151,22 @@ module "disabled" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 19.10"
+  version = "~> 19.16"
 
-  cluster_name    = local.name
-  cluster_version = "1.24"
+  cluster_name                   = local.name
+  cluster_version                = "1.27"
+  cluster_endpoint_public_access = true
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
   eks_managed_node_groups = {
     initial = {
-      instance_types = ["m5.xlarge"]
+      instance_types = ["m5.large"]
 
       min_size     = 1
-      max_size     = 2
-      desired_size = 1
+      max_size     = 3
+      desired_size = 2
     }
   }
 
@@ -185,7 +180,7 @@ module "eks" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 4.0"
+  version = "~> 5.0"
 
   name = local.name
   cidr = local.vpc_cidr
@@ -218,7 +213,6 @@ resource "aws_iam_instance_profile" "karpenter" {
 }
 
 data "aws_iam_policy_document" "karpenter_controller" {
-  # # checkov:skip=CKV_AWS_111
   statement {
     actions = [
       "ec2:CreateLaunchTemplate",
@@ -297,86 +291,4 @@ resource "aws_iam_policy" "karpenter_controller" {
   policy      = data.aws_iam_policy_document.karpenter_controller.json
 
   tags = local.tags
-}
-
-################################################################################
-# Karpenter Provisioner
-################################################################################
-
-# Workaround - https://github.com/hashicorp/terraform-provider-kubernetes/issues/1380#issuecomment-967022975
-resource "kubectl_manifest" "karpenter_provisioner" {
-  yaml_body = <<-YAML
-    ---
-    apiVersion: karpenter.sh/v1alpha5
-    kind: Provisioner
-    metadata:
-      name: default
-    spec:
-      requirements:
-        - key: karpenter.sh/capacity-type
-          operator: In
-          values: ["spot"]
-      limits:
-        resources:
-          cpu: 1000
-      providerRef:
-        name: default
-      ttlSecondsAfterEmpty: 30
-  YAML
-
-  depends_on = [
-    module.helm_release_irsa.helm_release
-  ]
-}
-
-resource "kubectl_manifest" "karpenter_node_template" {
-  yaml_body = <<-YAML
-    apiVersion: karpenter.k8s.aws/v1alpha1
-    kind: AWSNodeTemplate
-    metadata:
-      name: default
-    spec:
-      subnetSelector:
-        ${local.karpenter_tag_key}: ${module.eks.cluster_name}
-      securityGroupSelector:
-        ${local.karpenter_tag_key}: ${module.eks.cluster_name}
-      tags:
-        ${local.karpenter_tag_key}: ${module.eks.cluster_name}
-  YAML
-
-  depends_on = [
-    kubectl_manifest.karpenter_provisioner
-  ]
-}
-
-# Example deployment using the [pause image](https://www.ianlewis.org/en/almighty-pause-container)
-# and starts with zero replicas
-resource "kubectl_manifest" "karpenter_example_deployment" {
-  yaml_body = <<-YAML
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: inflate
-  spec:
-    replicas: 0
-    selector:
-      matchLabels:
-        app: inflate
-    template:
-      metadata:
-        labels:
-          app: inflate
-      spec:
-        terminationGracePeriodSeconds: 0
-        containers:
-          - name: inflate
-            image: public.ecr.aws/eks-distro/kubernetes/pause:3.2
-            resources:
-              requests:
-                cpu: 1
-  YAML
-
-  depends_on = [
-    kubectl_manifest.karpenter_node_template
-  ]
 }
