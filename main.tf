@@ -87,14 +87,18 @@ resource "helm_release" "this" {
 # IAM Role for Service Account(s) (IRSA)
 ################################################################################
 
-data "aws_partition" "current" {}
-data "aws_caller_identity" "current" {}
+data "aws_partition" "current" {
+  count = local.create_role ? 1 : 0
+}
+data "aws_caller_identity" "current" {
+  count = local.create_role ? 1 : 0
+}
 
 locals {
   create_role = var.create && var.create_role
 
-  account_id = data.aws_caller_identity.current.account_id
-  partition  = data.aws_partition.current.partition
+  account_id = try(data.aws_caller_identity.current[0].account_id, "*")
+  partition  = try(data.aws_partition.current[0].partition, "*")
 
   role_name           = try(coalesce(var.role_name, var.name), "")
   role_name_condition = var.role_name_use_prefix ? "${local.role_name}-*" : local.role_name
@@ -184,10 +188,11 @@ locals {
   create_policy = local.create_role && var.create_policy
 
   policy_name = try(coalesce(var.policy_name, local.role_name), "")
+  perms       = concat(var.source_policy_documents, var.override_policy_documents, var.policy_statements)
 }
 
 data "aws_iam_policy_document" "this" {
-  count = local.create_policy ? 1 : 0
+  count = local.create_policy && length(local.perms) > 0 ? 1 : 0
 
   source_policy_documents   = var.source_policy_documents
   override_policy_documents = var.override_policy_documents
@@ -235,7 +240,7 @@ data "aws_iam_policy_document" "this" {
 }
 
 resource "aws_iam_policy" "this" {
-  count = local.create_policy ? 1 : 0
+  count = local.create_policy && length(local.perms) > 0 ? 1 : 0
 
   name        = var.policy_name_use_prefix ? null : local.policy_name
   name_prefix = var.policy_name_use_prefix ? "${local.policy_name}-" : null
@@ -247,7 +252,7 @@ resource "aws_iam_policy" "this" {
 }
 
 resource "aws_iam_role_policy_attachment" "this" {
-  count = local.create_policy ? 1 : 0
+  count = local.create_policy && length(local.perms) > 0 ? 1 : 0
 
   role       = aws_iam_role.this[0].name
   policy_arn = aws_iam_policy.this[0].arn
