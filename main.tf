@@ -87,14 +87,18 @@ resource "helm_release" "this" {
 # IAM Role for Service Account(s) (IRSA)
 ################################################################################
 
-data "aws_partition" "current" {}
-data "aws_caller_identity" "current" {}
+data "aws_partition" "current" {
+  count = var.create ? 1 : 0
+}
+data "aws_caller_identity" "current" {
+  count = var.create ? 1 : 0
+}
 
 locals {
   create_role = var.create && var.create_role
 
-  account_id = data.aws_caller_identity.current.account_id
-  partition  = data.aws_partition.current.partition
+  account_id = data.aws_caller_identity[0].current.account_id
+  partition  = data.aws_partition[0].current.partition
 
   role_name           = try(coalesce(var.role_name, var.name), "")
   role_name_condition = var.role_name_use_prefix ? "${local.role_name}-*" : local.role_name
