@@ -64,7 +64,7 @@ resource "helm_release" "this" {
   }
 
   dynamic "set" {
-    for_each = { for k, v in toset(var.set_irsa_names) : k => v if var.create && var.create_role }
+    for_each = { for k, v in toset(var.set_irsa_names) : k => v if var.create && var.create_role && var.enable_pod_identity == false && var.create_pod_identity_association == false }
     iterator = each
     content {
       name  = each.value
@@ -84,7 +84,7 @@ resource "helm_release" "this" {
 }
 
 ################################################################################
-# IAM Role for Service Account(s) (IRSA)
+# Pod Identity and IAM Role for Service Account(s) (IRSA)
 ################################################################################
 
 data "aws_partition" "current" {
@@ -129,8 +129,25 @@ data "aws_iam_policy_document" "assume" {
     }
   }
 
+  # Pod Identity
   dynamic "statement" {
-    for_each = var.oidc_providers
+    for_each = var.enable_pod_identity ? [1] : []
+
+    content {
+      actions = [
+        "sts:AssumeRole",
+        "sts:TagSession",
+      ]
+
+      principals {
+        type        = "Service"
+        identifiers = ["pods.eks.amazonaws.com"]
+      }
+    }
+  }
+
+  dynamic "statement" {
+    for_each = var.enable_pod_identity && var.create_pod_identity_association ? {} : var.oidc_providers
 
     content {
       effect  = "Allow"
@@ -256,4 +273,19 @@ resource "aws_iam_role_policy_attachment" "this" {
 
   role       = aws_iam_role.this[0].name
   policy_arn = aws_iam_policy.this[0].arn
+}
+
+################################################################################
+# Pod Identity Association
+################################################################################
+
+resource "aws_eks_pod_identity_association" "this" {
+  count = local.create_role && var.enable_pod_identity && var.create_pod_identity_association ? 1 : 0
+
+  cluster_name    = var.cluster_name
+  namespace       = var.namespace
+  service_account = var.service_account
+  role_arn        = aws_iam_role.this[0].arn
+
+  tags = var.tags
 }

@@ -38,7 +38,7 @@ output "values" {
 }
 
 ################################################################################
-# IAM Role for Service Account(s) (IRSA)
+# Pod Identity and IAM Role for Service Account(s) (IRSA)
 ################################################################################
 
 output "iam_role_arn" {
@@ -59,6 +59,16 @@ output "iam_role_path" {
 output "iam_role_unique_id" {
   description = "Unique ID of IAM role"
   value       = try(aws_iam_role.this[0].unique_id, null)
+}
+
+output "service_account" {
+  description = "Service Account associated with the Pod Identity"
+  value       = var.service_account
+}
+
+output "create_pod_identity_association" {
+  description = "Pod Identity configuration"
+  value       = aws_eks_pod_identity_association.this
 }
 
 ################################################################################

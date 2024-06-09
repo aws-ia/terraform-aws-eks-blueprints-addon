@@ -10,6 +10,12 @@ variable "tags" {
   default     = {}
 }
 
+variable "cluster_name" {
+  description = "The name of the EKS cluster"
+  type        = string
+  default     = ""
+}
+
 ################################################################################
 # Helm Release
 ################################################################################
@@ -243,7 +249,7 @@ variable "set_irsa_names" {
 }
 
 ################################################################################
-# IAM Role for Service Account(s) (IRSA)
+# Pod Identity and IAM Role for Service Account(s) (IRSA)
 ################################################################################
 
 variable "create_role" {
@@ -310,6 +316,24 @@ variable "allow_self_assume_role" {
   description = "Determines whether to allow the role to be [assume itself](https://aws.amazon.com/blogs/security/announcing-an-update-to-iam-role-trust-policy-behavior/)"
   type        = bool
   default     = false
+}
+
+variable "enable_pod_identity" {
+  description = "Determines whether to enable support for EKS Pod Identity"
+  type        = bool
+  default     = false
+}
+
+variable "create_pod_identity_association" {
+  description = "Determines whether to create Pod Identity association"
+  type        = bool
+  default     = false
+}
+
+variable "service_account" {
+  description = "Service account to associate with the Pod Identity"
+  type        = string
+  default     = ""
 }
 
 ################################################################################

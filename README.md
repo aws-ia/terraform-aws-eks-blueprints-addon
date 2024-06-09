@@ -148,6 +148,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [aws_eks_pod_identity_association.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_pod_identity_association) | resource |
 | [aws_iam_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.additional](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
@@ -168,8 +169,10 @@ No modules.
 | <a name="input_chart"></a> [chart](#input\_chart) | Chart name to be installed. The chart name can be local path, a URL to a chart, or the name of the chart if `repository` is specified | `string` | `""` | no |
 | <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | Specify the exact chart version to install. If this is not specified, the latest version is installed | `string` | `null` | no |
 | <a name="input_cleanup_on_fail"></a> [cleanup\_on\_fail](#input\_cleanup\_on\_fail) | Allow deletion of new resources created in this upgrade when upgrade fails. Defaults to `false` | `bool` | `null` | no |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the EKS cluster | `string` | `""` | no |
 | <a name="input_create"></a> [create](#input\_create) | Controls if resources should be created (affects all resources) | `bool` | `true` | no |
 | <a name="input_create_namespace"></a> [create\_namespace](#input\_create\_namespace) | Create the namespace if it does not yet exist. Defaults to `false` | `bool` | `null` | no |
+| <a name="input_create_pod_identity_association"></a> [create\_pod\_identity\_association](#input\_create\_pod\_identity\_association) | Determines whether to create Pod Identity association | `bool` | `false` | no |
 | <a name="input_create_policy"></a> [create\_policy](#input\_create\_policy) | Whether to create an IAM policy that is attached to the IAM role created | `bool` | `true` | no |
 | <a name="input_create_release"></a> [create\_release](#input\_create\_release) | Determines whether the Helm release is created | `bool` | `true` | no |
 | <a name="input_create_role"></a> [create\_role](#input\_create\_role) | Determines whether to create an IAM role | `bool` | `false` | no |
@@ -178,6 +181,7 @@ No modules.
 | <a name="input_devel"></a> [devel](#input\_devel) | Use chart development versions, too. Equivalent to version '>0.0.0-0'. If version is set, this is ignored | `bool` | `null` | no |
 | <a name="input_disable_openapi_validation"></a> [disable\_openapi\_validation](#input\_disable\_openapi\_validation) | If set, the installation process will not validate rendered templates against the Kubernetes OpenAPI Schema. Defaults to `false` | `bool` | `null` | no |
 | <a name="input_disable_webhooks"></a> [disable\_webhooks](#input\_disable\_webhooks) | Prevent hooks from running. Defaults to `false` | `bool` | `null` | no |
+| <a name="input_enable_pod_identity"></a> [enable\_pod\_identity](#input\_enable\_pod\_identity) | Determines whether to enable support for EKS Pod Identity | `bool` | `false` | no |
 | <a name="input_force_update"></a> [force\_update](#input\_force\_update) | Force resource update through delete/recreate if needed. Defaults to `false` | `bool` | `null` | no |
 | <a name="input_keyring"></a> [keyring](#input\_keyring) | Location of public keys used for verification. Used only if verify is true. Defaults to `/.gnupg/pubring.gpg` in the location set by `home` | `string` | `null` | no |
 | <a name="input_lint"></a> [lint](#input\_lint) | Run the helm chart linter during the plan. Defaults to `false` | `bool` | `null` | no |
@@ -210,6 +214,7 @@ No modules.
 | <a name="input_role_path"></a> [role\_path](#input\_role\_path) | Path of IAM role | `string` | `"/"` | no |
 | <a name="input_role_permissions_boundary_arn"></a> [role\_permissions\_boundary\_arn](#input\_role\_permissions\_boundary\_arn) | Permissions boundary ARN to use for IAM role | `string` | `null` | no |
 | <a name="input_role_policies"></a> [role\_policies](#input\_role\_policies) | Policies to attach to the IAM role in `{'static_name' = 'policy_arn'}` format | `map(string)` | `{}` | no |
+| <a name="input_service_account"></a> [service\_account](#input\_service\_account) | Service account to associate with the Pod Identity | `string` | `""` | no |
 | <a name="input_set"></a> [set](#input\_set) | Value block with custom values to be merged with the values yaml | `any` | `[]` | no |
 | <a name="input_set_irsa_names"></a> [set\_irsa\_names](#input\_set\_irsa\_names) | Value annotations name where IRSA role ARN created by module will be assigned to the `value` | `list(string)` | `[]` | no |
 | <a name="input_set_sensitive"></a> [set\_sensitive](#input\_set\_sensitive) | Value block with custom sensitive values to be merged with the values yaml that won't be exposed in the plan's diff | `any` | `[]` | no |
@@ -228,6 +233,7 @@ No modules.
 |------|-------------|
 | <a name="output_app_version"></a> [app\_version](#output\_app\_version) | The version number of the application being deployed |
 | <a name="output_chart"></a> [chart](#output\_chart) | The name of the chart |
+| <a name="output_create_pod_identity_association"></a> [create\_pod\_identity\_association](#output\_create\_pod\_identity\_association) | Pod Identity configuration |
 | <a name="output_iam_policy"></a> [iam\_policy](#output\_iam\_policy) | The policy document |
 | <a name="output_iam_policy_arn"></a> [iam\_policy\_arn](#output\_iam\_policy\_arn) | The ARN assigned by AWS to this policy |
 | <a name="output_iam_role_arn"></a> [iam\_role\_arn](#output\_iam\_role\_arn) | ARN of IAM role |
@@ -237,6 +243,7 @@ No modules.
 | <a name="output_name"></a> [name](#output\_name) | Name is the name of the release |
 | <a name="output_namespace"></a> [namespace](#output\_namespace) | Name of Kubernetes namespace |
 | <a name="output_revision"></a> [revision](#output\_revision) | Version is an int32 which represents the version of the release |
+| <a name="output_service_account"></a> [service\_account](#output\_service\_account) | Service Account associated with the Pod Identity |
 | <a name="output_values"></a> [values](#output\_values) | The compounded values from `values` and `set*` attributes |
 | <a name="output_version"></a> [version](#output\_version) | A SemVer 2 conformant version string of the chart |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
