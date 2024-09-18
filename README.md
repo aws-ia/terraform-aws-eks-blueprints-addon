@@ -124,6 +124,15 @@ module "eks_blueprints_addon" {
 }
 ```
 
+## Support & Feedback
+
+> [!IMPORTANT]
+> EKS Blueprints for Terraform is maintained by AWS Solution Architects. It is not part of an AWS
+> service and support is provided as a best-effort by the EKS Blueprints community. To provide feedback,
+> please use the [issues templates](https://github.com/aws-ia/terraform-aws-eks-blueprints-addon/issues)
+> provided. If you are interested in contributing to EKS Blueprints, see the
+> [Contribution guide](https://github.com/aws-ia/terraform-aws-eks-blueprints-addon/blob/main/.github/CONTRIBUTING.md).
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
