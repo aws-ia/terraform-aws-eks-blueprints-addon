@@ -72,6 +72,15 @@ resource "helm_release" "this" {
     }
   }
 
+  dynamic "set_list" {
+    for_each = var.set_list
+
+    content {
+      name  = set_list.value.name
+      value = set_list.value.value
+    }
+  }
+
   dynamic "set_sensitive" {
     for_each = var.set_sensitive
 
