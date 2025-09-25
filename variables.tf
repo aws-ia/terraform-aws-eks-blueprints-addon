@@ -221,7 +221,7 @@ variable "lint" {
 variable "postrender" {
   description = "Configure a command to run after helm renders the manifest which can alter the manifest contents"
   type        = any
-  default     = {}
+  default     = null
 }
 
 variable "set" {
