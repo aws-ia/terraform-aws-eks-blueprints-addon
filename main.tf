@@ -43,15 +43,14 @@ resource "helm_release" "this" {
   dependency_update          = var.dependency_update
   replace                    = var.replace
   lint                       = var.lint
-
-  postrender = var.postrender != null && try(var.postrender.binary_path, null) != null ? var.postrender : null
+  postrender                 = var.postrender
 
   set = concat(
     var.set,
     [
       for name in var.set_irsa_names : {
         name  = name
-        value = var.create && var.create_role ? aws_iam_role.this[0].arn : ""
+        value = aws_iam_role.this[0].arn
       } if var.create && var.create_role
     ]
   )
