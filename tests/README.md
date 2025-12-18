@@ -18,7 +18,7 @@ $ terraform apply
 
 Note that this example may create resources which will incur monetary charges on your AWS bill. Run `terraform destroy` when you no longer need these resources.
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -41,6 +41,7 @@ Note that this example may create resources which will incur monetary charges on
 | <a name="module_eks"></a> [eks](#module\_eks) | terraform-aws-modules/eks/aws | ~> 19.16 |
 | <a name="module_helm_release_irsa"></a> [helm\_release\_irsa](#module\_helm\_release\_irsa) | ../ | n/a |
 | <a name="module_helm_release_only"></a> [helm\_release\_only](#module\_helm\_release\_only) | ../ | n/a |
+| <a name="module_irsa_extra_statements"></a> [irsa\_extra\_statements](#module\_irsa\_extra\_statements) | ../ | n/a |
 | <a name="module_irsa_only"></a> [irsa\_only](#module\_irsa\_only) | ../ | n/a |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
 
@@ -95,6 +96,6 @@ No inputs.
 | <a name="output_irsa_only_revision"></a> [irsa\_only\_revision](#output\_irsa\_only\_revision) | Version is an int32 which represents the version of the release |
 | <a name="output_irsa_only_values"></a> [irsa\_only\_values](#output\_irsa\_only\_values) | The compounded values from `values` and `set*` attributes |
 | <a name="output_irsa_only_version"></a> [irsa\_only\_version](#output\_irsa\_only\_version) | A SemVer 2 conformant version string of the chart |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
 
 Apache-2.0 Licensed. See [LICENSE](https://github.com/aws-ia/terraform-aws-eks-blueprints-addon/blob/main/LICENSE).

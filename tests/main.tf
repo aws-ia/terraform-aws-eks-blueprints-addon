@@ -139,6 +139,47 @@ module "irsa_only" {
   tags = local.tags
 }
 
+module "irsa_extra_statements" {
+  source = "../"
+
+  # Disable helm release
+  create_release = false
+
+  # IAM role for service account (IRSA + extra statements)
+  create_role = true
+  role_name   = "aws-vpc-cni-ipv4"
+  role_policies = {
+    AmazonEKS_CNI_Policy = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  }
+
+  oidc_providers = {
+    this = {
+      provider_arn    = module.eks.oidc_provider_arn
+      namespace       = "kube-system"
+      service_account = "aws-node"
+    }
+  }
+
+  trust_policy_statements = [
+    {
+      sid    = "PodIdentity"
+      effect = "Allow"
+      actions = [
+        "sts:AssumeRole",
+        "sts:TagSession",
+      ]
+      principals = [
+        {
+          type        = "Service"
+          identifiers = ["pods.eks.amazonaws.com"]
+        }
+      ]
+    }
+  ]
+
+  tags = local.tags
+}
+
 module "disabled" {
   source = "../"
 
