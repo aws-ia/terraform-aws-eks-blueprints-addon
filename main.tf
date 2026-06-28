@@ -43,44 +43,19 @@ resource "helm_release" "this" {
   dependency_update          = var.dependency_update
   replace                    = var.replace
   lint                       = var.lint
+  postrender                 = var.postrender
 
-  dynamic "postrender" {
-    for_each = length(var.postrender) > 0 ? [var.postrender] : []
+  set = concat(
+    var.set,
+    [
+      for name in var.set_irsa_names : {
+        name  = name
+        value = aws_iam_role.this[0].arn
+      } if var.create && var.create_role
+    ]
+  )
 
-    content {
-      binary_path = postrender.value.binary_path
-      args        = try(postrender.value.args, null)
-    }
-  }
-
-  dynamic "set" {
-    for_each = var.set
-
-    content {
-      name  = set.value.name
-      value = set.value.value
-      type  = try(set.value.type, null)
-    }
-  }
-
-  dynamic "set" {
-    for_each = { for k, v in toset(var.set_irsa_names) : k => v if var.create && var.create_role }
-    iterator = each
-    content {
-      name  = each.value
-      value = aws_iam_role.this[0].arn
-    }
-  }
-
-  dynamic "set_sensitive" {
-    for_each = var.set_sensitive
-
-    content {
-      name  = set_sensitive.value.name
-      value = set_sensitive.value.value
-      type  = try(set_sensitive.value.type, null)
-    }
-  }
+  set_sensitive = var.set_sensitive
 }
 
 ################################################################################
